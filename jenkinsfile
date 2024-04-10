@@ -1,0 +1,24 @@
+pipeline{
+    agent any
+    environment {
+        DOCKERHUB_CREDENTIALS=credentials("Docker-cred")
+    }
+    
+    stages {
+        stage('Fetch Code'){
+            steps {
+                git branch: 'main', url: 'https://github.com/kannancloud001/Docker.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'docker build -t nginx:kannan .'
+            }
+        }
+        stage('Login') {
+            steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+    }
+}
