@@ -2,6 +2,7 @@ pipeline{
     agent any
     environment {
         DOCKERHUB_CREDENTIALS=credentials("Docker-cred")
+        GIT_CREDENTIALS = credentials('Github-cred')
     }
     
     stages {
@@ -12,7 +13,7 @@ pipeline{
         }
         stage('Build') {
             steps {
-                sh 'docker build -t web/nginx:kannan .'
+                sh 'docker build -t new:kannan .'
             }
         }
         stage('Login') {
@@ -20,9 +21,9 @@ pipeline{
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
-        stage(Push) {
+        stage('Run') {
             steps {
-                sh 'docker image push kannandolmites/nginx:kannan'
+                sh 'docker run -itd -p 80:80 new:kannan'
             }
         }
     }
