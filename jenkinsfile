@@ -26,5 +26,15 @@ pipeline{
                 sh 'docker run -itd -p 80:80 new:kannan'
             }
         }
+        stage('Tag') {
+            steps {
+                sh 'docker tag new:kannan kannandolmites/new:kannan'
+            }
+        }
+        stage('Push') {
+            steps {
+                sh 'docker image push kannandolmites/new:kannan'
+            }
+        }
     }
 }
